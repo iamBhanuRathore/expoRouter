@@ -23,23 +23,30 @@ export const useUserDetails = () => useContext(UserContext);
 // Provider component
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchUserDetails = async () => {
+    console.log("Inside fetch User Details");
     // if we have auth token -- then we are going to get the access token
     // If we have the access token then we are going to get the user details
     const authToken = await AsyncStorage.getItem("authToken");
-    const accessToken = await AsyncStorage.getItem("authToken");
+    const accessToken = await AsyncStorage.getItem("accessToken");
+    console.log({ authToken, accessToken });
+    if (!accessToken && !authToken) {
+      router.replace("(auth)/login");
+    }
+
     // If we are here after the login
     if (authToken && !accessToken) {
+      console.log("First Time");
       try {
         const data = await getAccessTokenApi(authToken);
+        if (data?.error_description) {
+        }
+        console.log("authToken-->", data);
       } catch (error) {
         router.replace("(auth)/login");
       }
     }
-    // // if we refresh on this page and we have access token
-    // if (!authToken && accessToken) {
-    // }
+
     try {
-      //   const token = (await AsyncStorage.getItem("authToken")) || "Token Hahah";
       if (authToken) {
         setUser((p) => ({ ...p, loading: true }));
         const userDetails = await getUserDetailsApi(authToken);

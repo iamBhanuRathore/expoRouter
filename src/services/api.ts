@@ -1,3 +1,4 @@
+import { clientId, clientSecret, redirectUri } from "@/app/(auth)/login";
 import { catchAsyncErrors } from "@/lib/utils";
 
 // <-------- For Getting the accessToken --------->
@@ -6,12 +7,6 @@ import { Buffer } from "buffer"; // for base64 encoding
 import { makeRedirectUri } from "expo-auth-session";
 const AUTH_BASE_URL = "https://accounts.spotify.com/api";
 // const USER_BASE_URL = "https://api.spotify.com/v1";
-const redirectUri = makeRedirectUri({
-  scheme: "acme",
-  path: "(main)",
-});
-const clientId = "a9c371842776484c9202086d65d111d2";
-const clientSecret = "ed35bfb8f6f94bc2ad5b136aea4d1bce";
 
 // export const getUserDetailsApi = catchAsyncErrors(async (token: string) => {
 //   console.log({ token });
