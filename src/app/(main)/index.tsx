@@ -1,5 +1,5 @@
 import { SafeAreaView, Text } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { router } from "expo-router";
 import { useUserDetails } from "@/providers/auth-provider";
 
@@ -12,7 +12,16 @@ const Main = () => {
       </SafeAreaView>
     );
   }
+  // (main)/index
+  useEffect(() => {
+    // Wait for user context to update
+    if (user) {
+      router.replace("(main)/home");
+    }
+  }, [user]);
+
   if (error) {
+    console.log("from error from herer");
     router.replace("(auth)/login");
     // return (
     //   <SafeAreaView>
@@ -20,6 +29,7 @@ const Main = () => {
     //   </SafeAreaView>
     // );
   }
+  console.log({ user });
   if (user) {
     router.replace("(main)/home");
     return;

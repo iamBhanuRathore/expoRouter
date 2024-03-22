@@ -1,21 +1,13 @@
 import { View, Text, Button, SafeAreaView, Pressable } from "react-native";
-import React from "react";
-import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
+import React, { useEffect } from "react";
+import { useAuthRequest } from "expo-auth-session";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-export const discovery = {
-  authorizationEndpoint: "https://accounts.spotify.com/authorize",
-  tokenEndpoint: "https://accounts.spotify.com/api/token",
-};
-export const clientId = "a9c371842776484c9202086d65d111d2";
-export const clientSecret = "ed35bfb8f6f94bc2ad5b136aea4d1bce";
-
-export const redirectUri = makeRedirectUri({
-  scheme: "acme",
-  path: "/(main)/home",
-});
+// import { useUserDetails } from "@/providers/auth-provider";
+import { clientId, discovery, redirectUri } from "@/lib/constants";
 const Login = () => {
-  const [a, b, promptAsync] = useAuthRequest(
+  // const { refetch } = useUserDetails();
+  const [req, res, promptAsync] = useAuthRequest(
     {
       clientId,
       scopes: [
@@ -42,18 +34,26 @@ const Login = () => {
     },
     discovery
   );
+  useEffect(() => {
+    console.log({ res });
+    //@ts-ignore
+    if (res?.params?.code) {
+      console.log("refetching");
+      // refetch();
+    }
+  }, [res]);
   const login = async () => {
     try {
       const data = await promptAsync();
       if (data.type === "success") {
         console.log("Login Success");
         await AsyncStorage.setItem("authToken", data.params.code);
-        router.navigate("/(main)/home");
       }
     } catch (error) {
       console.error("Login error:", error);
     }
   };
+
   return (
     <SafeAreaView className="flex-1 gap-y-10 justify-center items-center  bg-gray-900">
       <Text className="text-6xl italic text-green-600">Suntify</Text>

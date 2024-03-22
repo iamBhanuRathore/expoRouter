@@ -4,6 +4,8 @@ import { StatusBar, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import "../global.css";
 import { UserProvider } from "@/providers/auth-provider";
+import { QueryProvider } from "@/providers/query-provider";
+
 const MainLayout = () => {
   const { top } = useSafeAreaInsets();
 
@@ -21,15 +23,17 @@ const MainLayout = () => {
         hidden={false}
       /> */}
       <UserProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen
-            name="(auth)"
-            options={{
-              title: "Login",
-            }}
-          />
-          <Stack.Screen name="(main)/index" />
-        </Stack>
+        <QueryProvider>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="(auth)"
+              options={{
+                title: "Login",
+              }}
+            />
+            <Stack.Screen name="(main)/index" />
+          </Stack>
+        </QueryProvider>
       </UserProvider>
     </View>
   );
