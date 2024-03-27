@@ -7,8 +7,10 @@ import {
   ScrollView,
   FlatList,
   Image,
+  Animated,
+  Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigation } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,19 +22,28 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 
 import { useGetLikedSongs } from "@/services/queries";
 import { usePlayer } from "@/providers/player-provider";
+import PlayerBar from "@/components/player-bar";
 const Liked = () => {
   const { data, error, isLoading } = useGetLikedSongs();
   const { currentTrack, setCurrentTrack } = usePlayer();
   const [search, setSearch] = useState("");
+
   const navigation = useNavigation();
   const onBack = () => {
     navigation.goBack();
   };
-  console.log(data);
+  // console.log(data);
   //   navigation.setOptions({
   //     headerShown: true,
   //   });
-  const playAllLikedSongs = async () => {};
+  const playAllLikedSongs = async () => {
+    if (data.items.length !== 0) {
+      setCurrentTrack(data.items[0]);
+    }
+    await play(data.items[0]);
+  };
+  const play = async (item) => {};
+
   return (
     <LinearGradient colors={["#614385", "#516395"]} className="flex-1">
       {/* Top SearchBar */}
@@ -96,6 +107,7 @@ const Liked = () => {
         )}
         {/* <Text>{JSON.stringify(data)}</Text> */}
       </ScrollView>
+      {currentTrack && <PlayerBar />}
     </LinearGradient>
   );
 };
@@ -103,43 +115,67 @@ const Liked = () => {
 export default Liked;
 
 const SingleLikedSong = ({ item }) => {
+  const animatedValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(animatedValue, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }, [animatedValue]);
+
+  const animatedStyle = {
+    transform: [
+      {
+        translateY: animatedValue.interpolate({
+          inputRange: [0, 1],
+          outputRange: [100, 0],
+        }),
+      },
+    ],
+    opacity: animatedValue,
+  };
+
   return (
-    <TouchableOpacity
-      style={{
-        marginVertical: 5,
-        marginHorizontal: 15,
-        borderColor: "#61438575",
-        borderWidth: 1,
-        borderRadius: 6,
-        overflow: "hidden",
-      }}>
-      <View className="flex-row items-center">
-        <Image
-          height={60}
-          width={60}
-          source={{ uri: item?.track?.album?.images[0].url }}
-        />
-        <View className="flex-1 mx-[10px]">
-          <Text numberOfLines={1} className="text-zinc-200 text-lg">
-            {item?.track?.name}
-          </Text>
-          <Text className="text-zinc-400 mt-2">
-            {item?.track?.artists?.[0].name}
-          </Text>
+    <Animated.View style={[animatedStyle]}>
+      <TouchableOpacity
+        style={{
+          marginVertical: 5,
+          marginHorizontal: 15,
+          borderColor: "#61438575",
+          borderWidth: 1,
+          borderRadius: 6,
+          overflow: "hidden",
+        }}>
+        <View className="flex-row items-center">
+          <Image
+            height={60}
+            width={60}
+            source={{ uri: item?.track?.album?.images[0].url }}
+          />
+          <View className="flex-1 mx-[10px]">
+            <Text numberOfLines={1} className="text-zinc-200 text-lg">
+              {item?.track?.name}
+            </Text>
+            <Text className="text-zinc-400 mt-2">
+              {item?.track?.artists?.[0].name}
+            </Text>
+          </View>
+          <View className="flex-row" style={{ columnGap: 15 }}>
+            <Pressable>
+              <Fontisto name="heart" size={22} color="rgb(22 163 74 )" />
+            </Pressable>
+            <Pressable>
+              <SimpleLineIcons
+                name="options-vertical"
+                size={24}
+                color="rgb(161 161 170)"
+              />
+            </Pressable>
+          </View>
         </View>
-        <View className="flex-row" style={{ columnGap: 15 }}>
-          <Pressable>
-            <Fontisto name="heart" size={24} color="rgb(22 163 74 )" />
-          </Pressable>
-          <Pressable>
-            <SimpleLineIcons
-              name="options-vertical"
-              size={24}
-              color="rgb(161 161 170)"
-            />
-          </Pressable>
-        </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Animated.View>
   );
 };

@@ -134,7 +134,7 @@ const RecentPlayed = () => {
               // height={item.track.album.images[0].height}
               // width={item.track.album.images[0].width}
             />
-            <View className="flex-1 justify-center pl-4">
+            <View className="flex-1 justify-center pl-4 bg-zinc-700">
               <Text numberOfLines={1} className="font-bold text-white">
                 {item.track.name}
               </Text>

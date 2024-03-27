@@ -14,7 +14,7 @@ const LikedButtonComponent = () => {
           uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8j1phplfUkt-F1EAB3ieH1liY7MD_GvOg3Q&usqp=CAU",
         }}
       />
-      <Text className="text-zinc-300">Liked Songs</Text>
+      <Text className="text-zinc-300 ml-[10px]">Liked Songs</Text>
     </Pressable>
   );
 };
@@ -52,7 +52,7 @@ const LikebarComponent = () => {
               <Text
                 ellipsizeMode="clip"
                 numberOfLines={1}
-                className="text-zinc-300 text-lg">
+                className="text-zinc-300 ml-[10px] text-lg">
                 {item.name}
               </Text>
             </Pressable>
