@@ -7,6 +7,7 @@ import { UserType } from "@/typings";
 type UserContextType = {
   loading: boolean;
   user: UserType | null;
+  accessToken: string;
   error: string;
   refetch: () => Promise<void>;
 };
@@ -22,7 +23,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchUserDetails = async () => {
     console.log("Inside fetch User Details");
     try {
-      setUser((p) => ({ ...p, loading: true }));
+      setUser((p) => ({ ...p, loading: true, accessToken: "" }));
       // if we have auth token -- then we are going to get the access token
       // If we have the access token then we are going to get the user details
       let authToken = await AsyncStorage.getItem("authToken");
@@ -66,11 +67,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
       // if userdetails get error again go to the login
-      setUser((p) => ({ ...p, user: userDetails }));
+      setUser((p) => ({ ...p, user: userDetails, accessToken }));
     } catch (error) {
       setUser((p) => ({
         ...p,
         error: error?.message || "Unknown error Occured",
+        accessToken: "",
       }));
     } finally {
       setUser((p) => ({ ...p, loading: false }));
@@ -79,6 +81,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserContextType>({
     loading: true,
     user: null,
+    accessToken: "",
     error: "",
     refetch: fetchUserDetails,
   });

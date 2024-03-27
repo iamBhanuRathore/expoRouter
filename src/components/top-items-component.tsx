@@ -1,5 +1,5 @@
-import { useGetUsersTopItems } from "@/services/queries";
 import React from "react";
+import { useGetUsersTopItems } from "@/services/queries";
 import { FlatList, Image, Text, View } from "react-native";
 
 type Props = {
@@ -28,7 +28,7 @@ const GetTopItems = ({ type }: Props) => {
 export default GetTopItems;
 
 export const ArtistCard = ({ item }) => {
-  console.log(item);
+  // console.log(item);
   return (
     <View className="drop-shadow-sm p-1">
       <Image

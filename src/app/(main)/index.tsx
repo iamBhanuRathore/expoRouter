@@ -5,13 +5,6 @@ import { useUserDetails } from "@/providers/auth-provider";
 
 const Main = () => {
   const { error, loading, user } = useUserDetails();
-  if (loading) {
-    return (
-      <SafeAreaView>
-        <Text>Loading...</Text>
-      </SafeAreaView>
-    );
-  }
   // (main)/index
   useEffect(() => {
     // Wait for user context to update
@@ -19,6 +12,13 @@ const Main = () => {
       router.replace("(main)/home");
     }
   }, [user]);
+  if (loading) {
+    return (
+      <SafeAreaView>
+        <Text>Loading...</Text>
+      </SafeAreaView>
+    );
+  }
 
   if (error) {
     console.log("from error from herer");
@@ -29,7 +29,7 @@ const Main = () => {
     //   </SafeAreaView>
     // );
   }
-  console.log({ user });
+  // console.log({ user });
   if (user) {
     router.replace("(main)/home");
     return;

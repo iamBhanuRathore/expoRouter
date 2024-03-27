@@ -116,7 +116,7 @@ const dummyData = {
   ],
 };
 const RecentPlayed = () => {
-  const { data, isLoading, isError } = useRecentPlayedSongs();
+  const { data, isLoading, isError, error } = useRecentPlayedSongs();
   const tracks = data?.items?.length ? data?.items : dummyData.items;
   return (
     <View>

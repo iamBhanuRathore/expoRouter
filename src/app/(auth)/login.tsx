@@ -35,7 +35,7 @@ const Login = () => {
     discovery
   );
   useEffect(() => {
-    console.log({ res });
+    // console.log({ res });
     //@ts-ignore
     if (res?.params?.code) {
       console.log("refetching");

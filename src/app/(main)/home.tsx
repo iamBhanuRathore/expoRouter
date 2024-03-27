@@ -1,8 +1,6 @@
 import { View, Text, Pressable, ScrollView, FlatList } from "react-native";
 import React, { useEffect } from "react";
 import { useUserDetails } from "@/providers/auth-provider";
-import { Link, router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import LikebarComponent from "@/components/likebar-component";
 import RecentPlayed from "@/components/recent-played";
 import GetTopItems from "@/components/top-items-component";
@@ -58,17 +56,16 @@ const tabButtons = [
   },
 ];
 const HomeRoute = () => {
-  const { user, refetch, error } = useUserDetails();
+  const { user, refetch } = useUserDetails();
   // if (error) {
   //   router.replace("(auth)/login");
   // }
   useEffect(() => {
-    refetch();
+    if (!user) {
+      refetch();
+    }
   }, []);
-  const handleClearStorage = async () => {
-    await AsyncStorage.clear();
-    router.replace("(auth)/login");
-  };
+  if (!user) return null;
   return (
     <View className="bg-zinc-800 flex-1">
       {/* <LinearGradient colors={["#040306", "#131624"]}> */}

@@ -1,8 +1,14 @@
 import { cn, greetings } from "@/lib/utils";
 import { router } from "expo-router";
-import React, { useEffect } from "react";
-import { Image, SafeAreaView, Text, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React from "react";
+import {
+  Image,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUserDetails } from "@/providers/auth-provider";
 
@@ -12,8 +18,11 @@ type Props = {
 
 const UserAvatar = ({ className }: Props) => {
   const { user } = useUserDetails();
-  console.log("user", user);
-
+  // console.log("user", user);
+  const handleLogout = async () => {
+    await AsyncStorage.clear();
+    router.replace("(auth)/login");
+  };
   return (
     <SafeAreaView
       className={cn(
@@ -37,11 +46,14 @@ const UserAvatar = ({ className }: Props) => {
         <Text className="text-white">{greetings()}</Text>
         <Text className="text-green-500"> {user?.display_name}</Text>
       </Text>
-      <MaterialCommunityIcons
+      {/* <MaterialCommunityIcons
         name="lightning-bolt-outline"
         size={24}
         color="white"
-      />
+      /> */}
+      <TouchableOpacity onPress={handleLogout}>
+        <MaterialIcons name="logout" size={26} color="white" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
