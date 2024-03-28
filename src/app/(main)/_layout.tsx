@@ -6,12 +6,12 @@ import { ModalPortal } from "react-native-modals";
 const Layout = () => {
   return (
     <Fragment>
-      {/* <ModalPortal> */}
+      {/* used for the library  */}
       <ModalProvider>
         <Slot />
+        <ModalPortal />
         <SongPlayerModal />
       </ModalProvider>
-      {/* </ModalPortal> */}
     </Fragment>
   );
 };
