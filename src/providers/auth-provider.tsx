@@ -20,6 +20,7 @@ export const useUserDetails = () => useContext(UserContext);
 // Provider component
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
+
   const fetchUserDetails = async () => {
     console.log("Inside fetch User Details");
     try {

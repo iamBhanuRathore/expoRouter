@@ -23,6 +23,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useGetLikedSongs } from "@/services/queries";
 import { usePlayer } from "@/providers/player-provider";
 import PlayerBar from "@/components/player-bar";
+import { Audio } from "expo-av";
 const Liked = () => {
   const { data, error, isLoading } = useGetLikedSongs();
   const { currentTrack, setCurrentTrack } = usePlayer();
@@ -36,13 +37,30 @@ const Liked = () => {
   //   navigation.setOptions({
   //     headerShown: true,
   //   });
+  const play = async (track) => {
+    const previewUrl = track?.track?.preview_url;
+    try {
+      await Audio.setAudioModeAsync({
+        playsInSilentModeIOS: true,
+        staysActiveInBackground: false,
+        shouldDuckAndroid: false,
+      });
+      const { sound, status } = await Audio.Sound.createAsync(
+        {
+          uri: previewUrl,
+        },
+        { shouldPlay: true, isLooping: false }
+      );
+      await sound.playAsync();
+    } catch (error) {}
+  };
+
   const playAllLikedSongs = async () => {
     if (data.items.length !== 0) {
       setCurrentTrack(data.items[0]);
     }
     await play(data.items[0]);
   };
-  const play = async (item) => {};
 
   return (
     <LinearGradient colors={["#614385", "#516395"]} className="flex-1">
