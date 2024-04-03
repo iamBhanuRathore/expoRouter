@@ -35082,13 +35082,22 @@
       const filterOnlyFirstThreeExpiryDates = data.records.data.filter((item) =>
         data.records.expiryDates.slice(0, 3).includes(item.expiryDate)
       );
-
       // Group the filtered data by expiry date
-      const groupByExpiry = Object.groupBy(
-        filterOnlyFirstThreeExpiryDates,
-        ({ expiryDate }) => expiryDate
+      // const groupByExpiry = Object.groupBy(
+      //   filterOnlyFirstThreeExpiryDates,
+      //   ({ expiryDate }) => expiryDate
+      // );
+      const groupByExpiry = filterOnlyFirstThreeExpiryDates.reduce(
+        (acc, curr) => {
+          const key = curr.expiryDate;
+          if (!acc[key]) {
+            acc[key] = [];
+          }
+          acc[key].push(curr);
+          return acc;
+        },
+        {}
       );
-
       // Get the underlying values for the first three expiry dates
       const underlyingValues = Object.entries(groupByExpiry).map(
         ([_, items]) => {
@@ -35096,10 +35105,9 @@
           return firstItem.CE?.underlyingValue || firstItem.PE?.underlyingValue;
         }
       );
-
       // Find the nearest strike price and calculate open interest for each expiry date
       const expiryDatesData = Object.entries(groupByExpiry).map(
-        ([_, items], index) => {
+        ([expityDate, items], index) => {
           const underlyingValue = underlyingValues[index];
           const nearestIndex = items.findIndex(
             (item) => item.strikePrice > underlyingValue
@@ -35119,7 +35127,6 @@
               (acc, curr) => acc + (curr?.PE?.changeinOpenInterest || 0),
               0
             );
-
             return { arr, totalCallOpenInterest, totalPutOpenInterest };
           };
 
@@ -35127,11 +35134,20 @@
           const for5 = getValuesFromRows(5);
           const for7 = getValuesFromRows(7);
 
-          return { underlyingValue, nearestStrikePrice, for3, for5, for7 };
+          return {
+            underlyingValue,
+            // nearestStrikePrice,
+            for3,
+            for5,
+            // for7,
+            expityDate: new Date(expityDate).toLocaleString(),
+            timeStamp: new Date(data.records.timestamp).toLocaleString(),
+            normalTImestamp: data.records.timestamp,
+            normalexpityDate: expityDate,
+          };
         }
       );
-
-      console.log(expiryDatesData);
+      console.log(JSON.stringify(expiryDatesData));
     </script>
   </body>
 </html>
