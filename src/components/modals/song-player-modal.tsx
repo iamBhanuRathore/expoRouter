@@ -1,8 +1,21 @@
-import { View, Text, Modal, Pressable, Image } from "react-native";
+import {
+  View,
+  Text,
+  Modal,
+  Pressable,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import { BottomModal, ModalContent } from "react-native-modals";
 import { useModal } from "@/providers/modal-provider";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Entypo,
+  FontAwesome,
+  Ionicons,
+  Feather,
+} from "@expo/vector-icons";
 import { usePlayer } from "@/providers/player-provider";
 type Props = {};
 
@@ -37,11 +50,20 @@ const SongPlayerModal = (props: Props) => {
         <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
           {/* Top bar for song name and other actions  */}
           <Pressable className="flex-row justify-between px-[10px]">
-            <AntDesign name="down" size={24} color="white" />
-            <Text className="flex-1 text-center text-2xl italic text-white">
+            <AntDesign
+              onPress={closeModal}
+              name="down"
+              size={24}
+              color="rgb(212 212 216)"
+            />
+            <Text className="flex-1 text-center text-2xl italic text-zinc-300">
               {currentTrack?.track?.name}
             </Text>
-            <Entypo name="dots-three-vertical" size={24} color="white" />
+            <Entypo
+              name="dots-three-vertical"
+              size={24}
+              color="rgb(212 212 216)"
+            />
           </Pressable>
           {/* Song Details like image, song name, artist name  */}
           <View className="items-center w-[90%] max-w-[500px]  mt-[50px]">
@@ -74,15 +96,31 @@ const SongPlayerModal = (props: Props) => {
             </View>
           </View>
           {/* Song Player */}
-          <View className="">
+          <View className="mt-[40px]">
             <Text className="text-center">
               ---------------------------------------------------------------------------------
             </Text>
             <View className="flex-row justify-between">
               <Text className="text-zinc-400 ">0.00</Text>
-
               <Text className="text-zinc-400">3.00</Text>
             </View>
+          </View>
+          <View className="flex-row w-full justify-between items-center mt-[20px] px-[40px]">
+            <TouchableOpacity>
+              <FontAwesome name="arrows" size={30} color="rgb(22 163 74 )" />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons name="play-skip-back" size={30} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <AntDesign name="pausecircle" size={60} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons name="play-skip-forward" size={30} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Feather name="repeat" size={30} color="rgb(22 163 74 )" />
+            </TouchableOpacity>
           </View>
         </View>
       </ModalContent>
