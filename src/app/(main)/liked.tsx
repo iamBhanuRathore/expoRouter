@@ -8,7 +8,6 @@ import {
   FlatList,
   Image,
   Animated,
-  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigation } from "expo-router";
@@ -26,40 +25,39 @@ import PlayerBar from "@/components/player-bar";
 import { Audio } from "expo-av";
 const Liked = () => {
   const { data, error, isLoading } = useGetLikedSongs();
-  const { currentTrack, setCurrentTrack } = usePlayer();
+  const { currentTrack, setCurrentTrack, playSong, setCurrentPlayList } =
+    usePlayer();
   const [search, setSearch] = useState("");
 
   const navigation = useNavigation();
   const onBack = () => {
     navigation.goBack();
   };
-  // console.log(data);
-  //   navigation.setOptions({
-  //     headerShown: true,
-  //   });
-  const play = async (track) => {
-    const previewUrl = track?.track?.preview_url;
-    try {
-      await Audio.setAudioModeAsync({
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: false,
-        shouldDuckAndroid: false,
-      });
-      const { sound, status } = await Audio.Sound.createAsync(
-        {
-          uri: previewUrl,
-        },
-        { shouldPlay: true, isLooping: false }
-      );
-      await sound.playAsync();
-    } catch (error) {}
-  };
+
+  // const play = async (track) => {
+  //   const previewUrl = track?.track?.preview_url;
+  //   try {
+  //     await Audio.setAudioModeAsync({
+  //       playsInSilentModeIOS: true,
+  //       staysActiveInBackground: false,
+  //       shouldDuckAndroid: false,
+  //     });
+  //     const { sound, status } = await Audio.Sound.createAsync(
+  //       {
+  //         uri: previewUrl,
+  //       },
+  //       { shouldPlay: true, isLooping: false }
+  //     );
+  //     await sound.playAsync();
+  //   } catch (error) {}
+  // };
 
   const playAllLikedSongs = async () => {
     if (data.items.length !== 0) {
       setCurrentTrack(data.items[0]);
     }
-    await play(data.items[0]);
+    setCurrentPlayList(data.items);
+    await playSong(data.items[0], 0);
   };
 
   return (
@@ -117,8 +115,8 @@ const Liked = () => {
           <FlatList
             data={data.items}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => {
-              return <SingleLikedSong item={item} />;
+            renderItem={({ item, index }) => {
+              return <SingleLikedSong item={item} index={index} />;
             }}
             keyExtractor={(_, index) => String(index)}
           />
@@ -132,7 +130,8 @@ const Liked = () => {
 
 export default Liked;
 
-const SingleLikedSong = ({ item }) => {
+const SingleLikedSong = ({ item, index }) => {
+  const { playSong, setCurrentPlayList, currentTrack } = usePlayer();
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -154,10 +153,21 @@ const SingleLikedSong = ({ item }) => {
     ],
     opacity: animatedValue,
   };
-
+  const playThisSongs = async () => {
+    // setCurrentPlayList(item);
+    console.log(item.track);
+    await playSong(item, index);
+  };
+  const isPlaying =
+    item?.track?.album?.id === currentTrack?.track?.album?.id
+      ? {
+          backgroundColor: "rgba(256 256 256 / 0.1)",
+        }
+      : {};
   return (
     <Animated.View style={[animatedStyle]}>
       <TouchableOpacity
+        onPress={playThisSongs}
         style={{
           marginVertical: 5,
           marginHorizontal: 15,
@@ -165,6 +175,7 @@ const SingleLikedSong = ({ item }) => {
           borderWidth: 1,
           borderRadius: 6,
           overflow: "hidden",
+          ...isPlaying,
         }}>
         <View className="flex-row items-center">
           <Image
@@ -174,7 +185,14 @@ const SingleLikedSong = ({ item }) => {
           />
           <View className="flex-1 mx-[10px]">
             <Text numberOfLines={1} className="text-zinc-200 text-lg">
-              {item?.track?.name}
+              {item?.track?.name}{" "}
+              {!item.track.preview_url && (
+                <MaterialCommunityIcons
+                  name="music-note-off"
+                  size={24}
+                  color="rgb(228 228 231)"
+                />
+              )}
             </Text>
             <Text className="text-zinc-400 mt-2">
               {item?.track?.artists?.[0].name}
