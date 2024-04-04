@@ -17,6 +17,8 @@ import {
   Feather,
 } from "@expo/vector-icons";
 import { usePlayer } from "@/providers/player-provider";
+import PlayerSlider from "../player-slider";
+
 type Props = {};
 
 const SongPlayerModal = (props: Props) => {
@@ -96,11 +98,9 @@ const SongPlayerModal = (props: Props) => {
             </View>
           </View>
           {/* Song Player */}
-          <View className="mt-[40px]">
-            <Text className="text-center">
-              ---------------------------------------------------------------------------------
-            </Text>
-            <View className="flex-row justify-between">
+          <View className="mt-[40px] w-[90%]">
+            <PlayerSlider />
+            <View className="mt-[10px] flex-row justify-between">
               <Text className="text-zinc-400 ">0.00</Text>
               <Text className="text-zinc-400">3.00</Text>
             </View>

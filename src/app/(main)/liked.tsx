@@ -155,7 +155,7 @@ const SingleLikedSong = ({ item, index }) => {
   };
   const playThisSongs = async () => {
     // setCurrentPlayList(item);
-    console.log(item.track);
+    // console.log(item.track);
     await playSong(item, index);
   };
   const isPlaying =

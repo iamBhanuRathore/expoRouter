@@ -11,6 +11,7 @@ import {
 import { usePlayer } from "@/providers/player-provider";
 import { AntDesign } from "@expo/vector-icons";
 import { useModal } from "@/providers/modal-provider";
+import PlayerSlider from "./player-slider";
 
 type Props = {};
 
@@ -50,8 +51,8 @@ const PlayerBar = (props: Props) => {
 
   return (
     <Animated.View style={[animatedStyle]}>
-      <View className="w-[95%] p-[5px] bg-[#795a9e] rounded-xl overflow-hidden mx-auto mb-[15px] absolute bottom-[10px] right-1/2 translate-x-1/2">
-        <ScrollView onScroll={() => console.log("HEllo")}>
+      <View className="w-[95%] px-[5px] pt-[5px] bg-[#795a9e] rounded-xl overflow-hidden mx-auto mb-[15px] absolute bottom-[10px] right-1/2 translate-x-1/2">
+        <ScrollView>
           <Pressable
             onPress={() => openModal("player-modal")}
             className="flex-row justify-between items-center">
@@ -85,6 +86,9 @@ const PlayerBar = (props: Props) => {
             </View>
           </Pressable>
         </ScrollView>
+        <View className="">
+          <PlayerSlider />
+        </View>
       </View>
     </Animated.View>
   );
